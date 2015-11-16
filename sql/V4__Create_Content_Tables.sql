@@ -7,7 +7,7 @@ CREATE TABLE resource (
  id varchar(36) NOT NULL, 
  title varchar(5000) NOT NULL,
  description varchar(20000), 
- format resource_format NOT NULL, 
+ format varchar(2000) NOT NULL, 
  thumbnail varchar(2000),
  url varchar(2000) NOT NULL, 
  sharing sharing_type NOT NULL, 
@@ -30,10 +30,11 @@ CREATE TABLE resource (
 CREATE INDEX resource_owner_id_idx ON 
  resource (owner_id);
 
--- Index on owner and last modified to improve query performance of queries that 
---provides list of resources for a particular owner modified in a given timespan  
-CREATE INDEX resource_owner_id_modified_idx ON 
- resource (owner_id, modified);
+-- Index on last modified to improve query performance of queries that 
+--provides list of top N resources modified    
+CREATE INDEX resource_modified_idx ON 
+ resource (modified);
+
 
 -- Information about question ingested offline / created by the user
 CREATE TABLE question (
@@ -58,10 +59,10 @@ CREATE TABLE question (
 CREATE INDEX question_owner_id_idx ON 
  question (owner_id);
 
--- Index on owner and last modified to improve query performance of queries that 
---provides list of questions for a particular owner modified in a given timespan.  
-CREATE INDEX question_owner_id_modified_idx ON 
- resource (owner_id, modified);
+-- Index on last modified to improve query performance of queries that 
+--provides list of top N questions modified   
+CREATE INDEX question_modified_idx ON 
+ question (modified);
 
 -- Container for resources and/or questions with metadata information
 CREATE TABLE collection (
@@ -88,10 +89,10 @@ CREATE TABLE collection (
 CREATE INDEX collection_owner_id_idx ON 
  collection (owner_id);
 
--- Index on owner and last modified to improve query performance of queries that 
---provides list of collections for a particular owner modified in a given timespan.  
-CREATE INDEX collection_owner_id_modified_idx ON 
- collection (owner_id, modified);
+-- Index on last modified to improve query performance of queries that 
+--provides list of top N collections modified   
+CREATE INDEX collection_modified_idx ON 
+ collection (modified);
 
 -- Create inverted index on collaborators JSONB doc, so we can search for a given user if 
 --she is collaborating on a particular collection and it needs to be shown in 
@@ -163,10 +164,10 @@ CREATE TABLE assessment (
 CREATE INDEX assessment_owner_id_idx ON 
  assessment (owner_id);
 
--- Index on owner and last modified to improve query performance of queries that 
---provides list of assessments for a particular owner modified in a given timespan.  
-CREATE INDEX assessment_owner_id_modified_idx ON 
- assessment (owner_id, modified);
+-- Index on last modified to improve query performance of queries that 
+--provides list of top N collections modified   
+CREATE INDEX assessment_modified_idx ON 
+ assessment (modified);
 
 -- Create inverted index on collaborators JSONB doc, so we can search for a given user if 
 --she is collaborating on a particular assessment and it needs to be shown in 
@@ -222,10 +223,10 @@ CREATE TABLE course (
 CREATE INDEX course_owner_id_idx ON 
  course (owner_id);
 
--- Index on course owner to show list of course belonging to a user modified in 
---a given timespan
-CREATE INDEX course_owner_id_modified_idx ON 
- course (owner_id, modified);
+-- Index on last modified to improve query performance of queries that 
+--provides list of top N courses modified last   
+CREATE INDEX course_modified_idx ON 
+ course (modified);
 
 -- Create an inverted index on classes that this course is associated with. 
 CREATE INDEX course_class_list_gin ON course 
@@ -240,7 +241,7 @@ CREATE TABLE course_unit(
  course_id varchar(36) NOT NULL,
  unit_id varchar(36) NOT NULL,
  title varchar(5000) NOT NULL,
- creator_id varchar(36) NOT NULL,
+ creator_id varchar(36) NOT NULL, 
  owner_id varchar(36) NOT NULL,
  created timestamp NOT NULL,
  modified timestamp NOT NULL,
@@ -261,10 +262,10 @@ CREATE TABLE course_unit_lesson(
  course_id varchar(36) NOT NULL,
  unit_id varchar(36) NOT NULL,
  lesson_id varchar(36) NOT NULL,
- title varchar(5000) NOT NULL,
- creator_id varchar(36) NOT NULL,
+ creator_id varchar(36) NOT NULL, 
  owner_id varchar(36) NOT NULL,
- created	timestamp NOT NULL,
+ title varchar(5000) NOT NULL,
+ created timestamp NOT NULL,
  modified timestamp NOT NULL,
  accessed timestamp NOT NULL,
  metadata JSONB,

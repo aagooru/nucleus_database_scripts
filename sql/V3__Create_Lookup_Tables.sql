@@ -3,6 +3,27 @@
 -- psql -U nucleus -f <path to>/V3__Create_Lookup_Tables.sql
 
 
+-- Supported question types
+-- TBD use table instead with JSON value?
+CREATE TYPE question_type AS ENUM ('multiple_choice', 'multiple_answer', 
+'true_false', 'fill_in_the_blank', 'open_ended', 'hot_text_reorder', 
+'hot_text_highlight',  'hot_spot_image', 'hot_spot_text');
+
+-- Supported sharing types 
+-- TBD use table instead with JSON value?
+CREATE TYPE sharing_type AS ENUM ('private', 'shared', 'public');
+
+-- Supported class member
+-- TBD use table instead with JSON value? 
+CREATE TYPE class_member_status AS ENUM ('invited', 'pending', 'joined');
+
+-- Supported classification type 
+CREATE TYPE subject_classification_type AS ENUM ('K-12', 'Higher Education', 'Professional Learning');
+
+-- Supported class visibility  
+CREATE TYPE class_visibility AS ENUM ('open', 'restricted');
+
+
 -- Taxonomy subject information 
 CREATE TABLE taxonomy_subject (
  id varchar(36) NOT NULL,
@@ -13,7 +34,7 @@ CREATE TABLE taxonomy_subject (
  name varchar(2000) NOT NULL, 
  description varchar(5000), 
  sequence_id smallint NOT NULL, 
- classification varchar(2000),
+ classification subject_classification_type NOT NULL,
  PRIMARY KEY(id)
 );
 
@@ -25,7 +46,7 @@ CREATE TABLE taxonomy_course (
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
- code varchar(2000), 
+ code varchar(2000) NOT NULL, 
  name varchar(2000) NOT NULL, 
  description varchar(5000), 
  grades varchar(2000),
@@ -43,7 +64,6 @@ CREATE TABLE taxonomy_domain (
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
- code varchar(2000), 
  name varchar(2000) NOT NULL, 
  description varchar(5000), 
  sequence_id smallint NOT NULL, 
@@ -58,7 +78,7 @@ CREATE TABLE taxonomy_subdomain (
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
- code varchar(2000), 
+ code varchar(2000) NOT NULL, 
  name varchar(2000) NOT NULL, 
  description varchar(5000), 
  sequence_id smallint NOT NULL, 
@@ -104,7 +124,7 @@ CREATE TABLE moments_of_learning (
 );
 
 -- Information about whether the question's depth of knowledge quotient whether 
---it is for recall, strategic thinking and so on
+--it is intended for recall, strategic thinking and so on
 CREATE TABLE depth_of_knowledge (
  id varchar(36) NOT NULL,
  creator_id varchar(36) NOT NULL,
@@ -188,22 +208,4 @@ CREATE TABLE audience (
  value JSONB NOT NULL, 
  PRIMARY KEY(id)
 );
-
--- Supported question types
--- TBD use table instead with JSON value?
-CREATE TYPE question_type AS ENUM ('multiple_choice', 'multiple_answer', 
-'true_false', 'fill_in_the_blank', 'open_ended', 'hot_text_reorder', 
-'hot_text_highlight',  'hot_spot_image', 'hot_spot_text');
-
--- Supported sharing types 
--- TBD use table instead with JSON value?
-CREATE TYPE sharing_type AS ENUM ('private', 'shared', 'public');
-
--- Supported class member
--- TBD use table instead with JSON value? 
-CREATE TYPE class_member_status AS ENUM ('invited', 'pending', 'joined');
-
-
- 
-
 
