@@ -10,6 +10,8 @@ CREATE TABLE class (
  creator_id varchar(36) NOT NULL,
  owner_id varchar(36) NOT NULL,
  title varchar(5000) NOT NULL,
+ description varchar(5000),
+ greeting varchar(5000),
  grade varchar(5000) NOT NULL,
  visibility class_visibility NOT NULL,
  cover_image varchar(2000), 

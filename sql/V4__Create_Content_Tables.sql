@@ -7,7 +7,7 @@ CREATE TABLE resource (
  id varchar(36) NOT NULL, 
  title varchar(5000) NOT NULL,
  description varchar(20000), 
- format varchar(2000) NOT NULL, 
+ format resource_format NOT NULL, 
  thumbnail varchar(2000),
  url varchar(2000) NOT NULL, 
  sharing sharing_type NOT NULL, 
@@ -139,7 +139,7 @@ CREATE INDEX collection_item_collection_id_question_id_idx ON
 -- Container for a questions with metadata and settings information 
 CREATE TABLE assessment (
  id varchar(36) NOT NULL, 
- type JSONB,
+ type assessment_type NOT NULL,
  url varchar(2000), 
  title varchar(5000) NOT NULL,
  creator_id varchar(36) NOT NULL, 
