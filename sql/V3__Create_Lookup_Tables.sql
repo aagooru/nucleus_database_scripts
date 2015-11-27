@@ -42,15 +42,11 @@ CREATE TYPE assessment_type AS ENUM ('internal', 'external');
 -- Advertisement level: Information about whether the content has some or more advertisements
 -- Hazard level: Information about whether the content has flashing hazard, sound hazard etc.
 -- Media feature: Information about whether the content has audio description, annotations etc. 
-
+-- 21st Century skills: Content mapping to 21st century skills as defined by P21
 CREATE TYPE metadata_reference_type AS ENUM ('educational_use', 'moments_of_learning', 
  'depth_of_knowledge', 'reading_level', 'audience', 'advertisement_level', 
- 'hazard_level', 'media_feature'
+ 'hazard_level', 'media_feature', 'twentyone_century_skill'
 );
-
---Type of codes supported in Gooru
-CREATE TYPE code_type AS ENUM ('standard', '21_century_skill');
-
 
 
 -- Generic lookup for metadata_reference_type values
@@ -67,7 +63,7 @@ CREATE TABLE metadata_reference (
 
 -- Taxonomy subject information 
 CREATE TABLE taxonomy_subject (
- id varchar(36) NOT NULL,
+ id serial NOT NULL,
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
@@ -82,8 +78,8 @@ CREATE TABLE taxonomy_subject (
 
 -- Taxonomy course information 
 CREATE TABLE taxonomy_course (
- id varchar(36) NOT NULL,
- subject_id varchar(36) NOT NULL,
+ id serial NOT NULL,
+ subject_id serial NOT NULL,
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
@@ -101,7 +97,7 @@ CREATE INDEX taxonomy_course_subject_id_idx ON
 
 -- Taxonomy domain information 
 CREATE TABLE taxonomy_domain (
- id varchar(36) NOT NULL,
+ id serial NOT NULL,
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
@@ -113,9 +109,9 @@ CREATE TABLE taxonomy_domain (
 
 -- Mapping between taxonomy course and domain 
 CREATE TABLE taxonomy_subdomain (
- id varchar(36) NOT NULL,
- course_id varchar(36) NOT NULL,
- domain_id varchar(36) NOT NULL,
+ id serial NOT NULL,
+ course_id serial NOT NULL,
+ domain_id serial NOT NULL,
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
@@ -130,9 +126,18 @@ CREATE TABLE taxonomy_subdomain (
 CREATE INDEX taxonomy_subdomain_course_id_domain_id_idx ON 
  taxonomy_subdomain (course_id, domain_id);
 
--- Generic table to store standards, taxonomy information
+CREATE TABLE subdomain_code (
+subdomain_id serial NOT NULL,
+code_id serial NOT NULL
+);
+
+-- Index on subdomain_id to enhance query performance
+CREATE INDEX subdomain_code_subdomain_id_idx ON 
+ subdomain_code (subdomain_id);
+
+-- Generic table to store standards information
 CREATE TABLE code (
- id bigserial NOT NULL,
+ id serial NOT NULL,
  creator_id varchar(36) NOT NULL,
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
@@ -140,7 +145,6 @@ CREATE TABLE code (
  code varchar(2000) NOT NULL,
  display_code varchar(2000) NOT NULL, 
  parent_id integer, 
- type code_type NOT NULL,
  depth smallint, 
  root_node_id integer,
  sequence_id smallint,
@@ -158,17 +162,5 @@ CREATE INDEX root_node_id_idx ON
 -- Index on code to enhance query performance
 CREATE INDEX code_code_idx ON 
  code (code);
-
-
--- Information about 21st century skills like critical thinking, 
---civic literacy and so on
---CREATE TABLE twentyone_century_skill (
--- id varchar(36) NOT NULL,
--- creator_id varchar(36) NOT NULL,
--- created timestamp NOT NULL, 
--- modified timestamp NOT NULL, 
--- value JSONB NOT NULL, 
--- PRIMARY KEY(id)
---);
 
 
