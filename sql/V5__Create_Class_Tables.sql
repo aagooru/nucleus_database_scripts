@@ -8,7 +8,6 @@ CREATE TABLE class (
  created timestamp NOT NULL,
  modified timestamp NOT NULL,
  creator_id varchar(36) NOT NULL,
- owner_id varchar(36) NOT NULL,
  title varchar(5000) NOT NULL,
  description varchar(5000),
  greeting varchar(5000),
@@ -29,9 +28,9 @@ CREATE TABLE class (
 CREATE INDEX class_collaborator_gin ON course 
  USING gin (collaborator jsonb_path_ops);
 
--- Create index on owner id so we can show list of classes owned by the user
-CREATE INDEX class_owner_id_idx ON 
- class (owner_id);
+-- Create index on creator id so we can show list of classes owned by the user
+CREATE INDEX class_creator_id_idx ON 
+ class (creator_id);
 
 -- Create index on course id 
 -- TBD - this may not be needed, but adding it for now

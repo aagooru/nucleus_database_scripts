@@ -14,8 +14,9 @@ CREATE TABLE resource (
  created timestamp NOT NULL,
  modified timestamp NOT NULL, 
  accessed timestamp NOT NULL, 
- creator_id varchar(36) NOT NULL, 
- owner_id varchar(36) NOT NULL,
+ original_creator_id varchar(36) NOT NULL, 
+ creator_id varchar(36) NOT NULL,
+ publish_date timestamp,
  is_frame_breaker boolean,
  is_broken boolean,
  is_deleted boolean,
@@ -27,8 +28,12 @@ CREATE TABLE resource (
 
 -- Index on owner to improve query performance of queries that provides list of 
 --resources for a given user
-CREATE INDEX resource_owner_id_idx ON 
- resource (owner_id);
+
+CREATE INDEX resource_original_creator_id_idx ON 
+ resource (original_creator_id);
+
+CREATE INDEX resource_creator_id_idx ON 
+ resource (creator_id);
 
 -- Index on last modified to improve query performance of queries that 
 --provides list of top N resources modified    
@@ -43,8 +48,9 @@ CREATE TABLE question (
  created timestamp NOT NULL, 
  modified timestamp NOT NULL, 
  accessed timestamp NOT NULL,
- creator_id varchar(36) NOT NULL, 
- owner_id varchar(36) NOT NULL,
+ original_creator_id varchar(36) NOT NULL, 
+ creator_id varchar(36) NOT NULL,
+ publish_date timestamp,
  title varchar(20000) NOT NULL, 
  explanation varchar(5000),
  hint JSONB NOT NULL,
@@ -56,8 +62,12 @@ CREATE TABLE question (
 
 -- Index on owner to improve query performance of queries that provides lists of 
 --resources for a given user.  
-CREATE INDEX question_owner_id_idx ON 
- question (owner_id);
+
+CREATE INDEX question_original_creator_id_idx ON 
+ question (original_creator_id);
+
+CREATE INDEX question_creator_id_idx ON 
+ question (creator_id);
 
 -- Index on last modified to improve query performance of queries that 
 --provides list of top N questions modified   
@@ -68,8 +78,9 @@ CREATE INDEX question_modified_idx ON
 CREATE TABLE collection (
  id varchar(36) NOT NULL, 
  title varchar(5000) NOT NULL, 
+ original_creator_id varchar(36) NOT NULL, 
  creator_id varchar(36) NOT NULL,
- owner_id varchar(36) NOT NULL,
+ publish_date timestamp,
  created timestamp NOT NULL,
  modified timestamp NOT NULL,
  accessed timestamp NOT NULL,
@@ -86,8 +97,12 @@ CREATE TABLE collection (
 
 -- Index on owner to improve query performance of queries that lists of collections 
 --for a given user.  
-CREATE INDEX collection_owner_id_idx ON 
- collection (owner_id);
+
+CREATE INDEX collection_original_creator_id_idx ON 
+ collection (original_creator_id);
+
+CREATE INDEX collection_creator_id_idx ON 
+ collection (creator_id);
 
 -- Index on last modified to improve query performance of queries that 
 --provides list of top N collections modified   
@@ -142,8 +157,9 @@ CREATE TABLE assessment (
  type assessment_type NOT NULL,
  url varchar(2000), 
  title varchar(5000) NOT NULL,
- creator_id varchar(36) NOT NULL, 
- owner_id varchar(36) NOT NULL, 
+ original_creator_id varchar(36) NOT NULL, 
+ creator_id varchar(36) NOT NULL,
+ publish_date timestamp, 
  created timestamp NOT NULL, 
  modified timestamp NOT NULL,
  accessed timestamp NOT NULL,
@@ -161,8 +177,11 @@ CREATE TABLE assessment (
 
 -- Index on owner to improve query performance of queries that lists of assessments 
 --for a given user.  
-CREATE INDEX assessment_owner_id_idx ON 
- assessment (owner_id);
+CREATE INDEX assessment_original_creator_id_idx ON 
+ assessment (original_creator_id);
+
+CREATE INDEX assessment_creator_id_idx ON 
+ assessment (creator_id);
 
 -- Index on last modified to improve query performance of queries that 
 --provides list of top N collections modified   
@@ -205,8 +224,9 @@ CREATE INDEX assessment_item_assessment_id_question_id_idx ON
 CREATE TABLE course (
  id varchar(36) NOT NULL,
  title varchar(5000) NOT NULL,
- creator_id varchar(36) NOT NULL, 
- owner_id varchar(36) NOT NULL, 
+ original_creator_id varchar(36) NOT NULL, 
+ creator_id varchar(36) NOT NULL,
+ publish_date timestamp, 
  created timestamp NOT NULL, 
  modified timestamp NOT NULL,
  accessed timestamp NOT NULL,
@@ -220,8 +240,12 @@ CREATE TABLE course (
 );
 
 -- Index on course owner to show list of course belonging to a user
-CREATE INDEX course_owner_id_idx ON 
- course (owner_id);
+
+CREATE INDEX course_original_creator_id_idx ON 
+ course (original_creator_id);
+
+CREATE INDEX course_creator_id_idx ON 
+ course (creator_id);
 
 -- Index on last modified to improve query performance of queries that 
 --provides list of top N courses modified last   
@@ -242,7 +266,6 @@ CREATE TABLE course_unit(
  unit_id varchar(36) NOT NULL,
  title varchar(5000) NOT NULL,
  creator_id varchar(36) NOT NULL, 
- owner_id varchar(36) NOT NULL,
  created timestamp NOT NULL,
  modified timestamp NOT NULL,
  accessed timestamp NOT NULL,
@@ -263,7 +286,6 @@ CREATE TABLE course_unit_lesson(
  unit_id varchar(36) NOT NULL,
  lesson_id varchar(36) NOT NULL,
  creator_id varchar(36) NOT NULL, 
- owner_id varchar(36) NOT NULL,
  title varchar(5000) NOT NULL,
  created timestamp NOT NULL,
  modified timestamp NOT NULL,
